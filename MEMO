@@ -1,0 +1,4 @@
+npx sv create myapp_js
+npx sv create myapp_ts
+
+
