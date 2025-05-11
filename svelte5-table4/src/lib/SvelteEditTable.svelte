@@ -513,14 +513,26 @@ export class Table {
     let col_num = parseInt(param[2]);
     console.log(row_num, col_num);
   }
+
+  json_data_save(r,c, content) {
+
+    let index = json_data[0]["index"];
+    let index_ = $state.snapshot(index)
+    let keys = Object.keys(index_)
+    console.log("key:", keys[c]);
+    json_data[r]["fields"][keys[c]] = content;
+
+    //json_data[4]["fields"]["A"] = "88888"
+  }
+
   table_data_save(td, content) {
     let param = td.id.split("_");
     let row_num = parseInt(param[1]);
     let col_num = parseInt(param[2]);
-    console.log(this.container_id, row_num, col_num, content);
-    //this.table_data = this.table_data;
-    //this.table_data.push([]);
-    //console.log("push");
+    //console.log(this.container_id, row_num, col_num, content);
+    this.table_data[row_num][col_num] = content;
+
+    this.json_data_save(row_num, col_num, content);
   }
 
   table_setid() {
