@@ -1,0 +1,8 @@
+table updata:  diff_update
+
+App.svelte
+     bind:json_data={data5}
+
+lib/SvelteEditTable.svelte
+          json_data =  $bindable({}),
+
