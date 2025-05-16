@@ -1,0 +1,18 @@
+let json_data3 = `
+[
+   {"index":["A","B","C","D","E"],                                // dict => array
+    "type":{"A":"int","B":"int","C":"int","D":"int","E":"int"},   // append
+    "title":{"A":"A","B":"B","C":"C","D":"D","E":"E"},
+    "freeze": { "c": 0, "r":0},
+    "update":""
+    },
+
+==================================
+table updata:  diff_update
+
+App.svelte
+     bind:json_data={data5}
+
+lib/SvelteEditTable.svelte
+          json_data =  $bindable({}),
+
