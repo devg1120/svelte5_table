@@ -958,7 +958,8 @@ export class Table {
     this.select_td[0].classList.remove("selected");
     this.select_td[0] = next_td;
     this.select_td[0].classList.add("selected");
-    this.select_td[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    //this.select_td[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    this.select_td[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
   }
 
   select_id_gen(r1, r2, c1, c2) {
