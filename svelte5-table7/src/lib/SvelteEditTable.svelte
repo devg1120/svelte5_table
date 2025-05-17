@@ -41,6 +41,8 @@ export class Table {
       ["prev insert row", this.prev_insert_row],
       ["left insert col", this.left_insert_col],
       ["right insert col", this.right_insert_col],
+      ["freeze on " , this.freeze_on],
+      ["freeze off ", this.freeze_off],
       ["data dump", this.data_dump],
       ["data save", this.data_save],
     ];
@@ -660,6 +662,23 @@ export class Table {
 
   };
 
+  freeze_on = () => {
+    //console.log("freeze on", this.freeze_decoded, this.select_td );
+    if (this.select_td[0] == null) { return ;}
+    let param = this.select_td[0].id.split("_");
+    let row_num = parseInt(param[1]);
+    let col_num = parseInt(param[2]);
+    this.freeze_decoded = { c:0,r:0};
+    this.table_freeze();
+    this.freeze_decoded = { c:col_num,r:row_num};
+    this.table_freeze();
+
+  }
+  freeze_off = () => {
+    console.log("freeze off", this.freeze_decoded, this.select_td );
+    this.freeze_decoded = { c:0,r:0};
+    this.table_freeze();
+  }
   data_dump = () => {
     this.contextMenu.classList.remove("visible");
     console.log("data_dump", this.container_id);

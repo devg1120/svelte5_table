@@ -116,10 +116,9 @@ table tr th {
   position: fixed;
   z-index: 10000;
   width: 150px;
-  background: #1b1a1a;
-  background: #ffffff;
+  background: #ccffff;
   border-radius: 5px;
-  border: 1px solid #0066cc;
+  /* border: 1px solid #0066cc;*/
   transform: scale(0);
   transform-origin: top left;
 }
@@ -131,6 +130,7 @@ table tr th {
 
 #context-menu .item {
   padding: 8px 10px;
+  padding: 1px 8px;
   font-size: 15px;
   color: #eee;
   color: #000;
