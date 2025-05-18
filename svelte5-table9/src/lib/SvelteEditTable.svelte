@@ -35,7 +35,6 @@ export class Table {
   constructor(container_id, width) {
     this.diff_update = true 
     this.container_id = container_id;
-    this.editor_mode = true;
     this.table_width = width;
     this.menu_list = [
       ["next insert row", this.next_insert_row],
@@ -44,10 +43,12 @@ export class Table {
       ["right insert col", this.right_insert_col],
       ["freeze on " , this.freeze_on],
       ["freeze off ", this.freeze_off],
+      ["editor_mode toggle", this.editor_mode_toggle],
       ["data dump", this.data_dump],
       ["data save", this.data_save],
     ];
     this.td_select_drag_start = false;
+    this.editor_mode = false;
     this.editting = false;
     this.editor = null;
     this.editting_td = null;
@@ -374,6 +375,27 @@ export class Table {
     this.tds = this.table.querySelectorAll("td");
 
     this.table.addEventListener("keydown", (event) => {
+      if (event.key == "Escape" && this.editting) {
+        if (this.editor != null) {
+          let content = this.editor.getContents(true);
+          this.editor.destroy();
+          this.editting_td.innerHTML = content;
+          this.editting_td.style.display = "";
+	  this.td_index(this.editting_td);
+	  this.table_data_save(this.editting_td, content);
+          this.editor = null;
+          //this.editting_td = null;
+          //this.editting = false;
+          this.editting = false;
+        }
+          if (this.editting_td != null) {
+           this.editting_td.setAttribute('contenteditable', true);
+           this.editting_td.classList.remove("editting");
+           this.editting_td = null;
+	  }
+	  return
+
+      }
       //if (this.editor != null) { return; }
       if (this.editting ) { return; }
       event.preventDefault();
@@ -735,6 +757,9 @@ export class Table {
     this.freeze_decoded = { c:0,r:0};
     this.table_freeze();
   }
+  editor_mode_toggle = () => {
+     this.editor_mode = !this.editor_mode;
+  }
   data_dump = () => {
     this.contextMenu.classList.remove("visible");
     console.log("data_dump", this.container_id);
@@ -919,6 +944,7 @@ export class Table {
           //this.editting = false;
         }
         if (this.editting_td != null) {
+          this.editting_td.setAttribute('contenteditable', true);
           this.editting_td.classList.remove("editting");
           this.editting_td = null;
 	}
