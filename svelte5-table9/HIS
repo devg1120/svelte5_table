@@ -1,4 +1,16 @@
 
+result[result.length - 1].push(items[i].fields[key]);
+  =>
+  result[result.length - 1].push({ value: items[i].fields[key]});
+
+td.innerHTML = table_data[i][j];
+  => 
+    td.innerHTML = table_data[i][j].value;
+
+span  col  & row
+
+key select span
+=========================================
 key down up left right => celect cell move
 
 =========================================

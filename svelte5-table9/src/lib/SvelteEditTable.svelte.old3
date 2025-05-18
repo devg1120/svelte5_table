@@ -49,7 +49,7 @@ export class Table {
       ["data save", this.data_save],
     ];
     this.td_select_drag_start = false;
-    this.editor_mode = true;
+    this.editor_mode = false;
     this.editting = false;
     this.editor = null;
     this.editting_td = null;
@@ -169,8 +169,7 @@ export class Table {
     index = items[0].index;
     //for (var key in items[0].title) {
     for (const key of index) {
-      //result[result.length - 1].push(items[0].title[key]);
-      result[result.length - 1].push({value: items[0].title[key]});
+      result[result.length - 1].push(items[0].title[key]);
     }
     var i = 0;
     while (i < items.length) {
@@ -178,8 +177,7 @@ export class Table {
         result.push([]);
         //for (var key in index) {
         for (const key of index) {
-          //result[result.length - 1].push(items[i].fields[key]);
-          result[result.length - 1].push({ value: items[i].fields[key]});
+          result[result.length - 1].push(items[i].fields[key]);
         }
       }
       i++;
@@ -223,12 +221,12 @@ export class Table {
       for (var j = 0; j < table_data[0].length; j++) {
         if (i === 0) {
           var th = document.createElement("th");
-          th.textContent = table_data[i][j].value;
+          th.textContent = table_data[i][j];
           tr.appendChild(th);
         } else {
           var td = document.createElement("td");
           //td.textContent = table_data[i][j];
-          td.innerHTML = table_data[i][j].value;
+          td.innerHTML = table_data[i][j];
           td.classList.add("noselect");
 	  //td.setAttribute('contenteditable', true);
           tr.appendChild(td);
@@ -248,13 +246,12 @@ export class Table {
           if (i === 0) {
             if (table_data[i][j] != this.table_data[i][j]) {
               var th = this.table.querySelector("#TH_0_" + String(j));
-              //th.textContent = table_data[i][j];
-              th.textContent = table_data[i][j].value;
+              th.textContent = table_data[i][j];
             }
           } else {
             if (table_data[i][j] != this.table_data[i][j]) {
               var td = this.table.querySelector("#TD_" + String(i) + "_" + String(j));
-              td.innerHTML = table_data[i][j].value;
+              td.innerHTML = table_data[i][j];
             }
           }
         }
@@ -265,11 +262,11 @@ export class Table {
         for (var j = 0; j < table_data[0].length; j++) {
           if (i === 0) {
             var th = this.table.querySelector("#TH_0_" + String(j));
-            th.textContent = table_data[i][j].value;
+            th.textContent = table_data[i][j];
           } else {
             var td = this.table.querySelector("#TD_" + String(i) + "_" + String(j));
             //td.textContent = table_data[i][j];
-            td.innerHTML = table_data[i][j].value;
+            td.innerHTML = table_data[i][j];
           }
         }
       }
