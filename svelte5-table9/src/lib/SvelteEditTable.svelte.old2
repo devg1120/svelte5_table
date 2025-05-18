@@ -998,67 +998,54 @@ export class Table {
     let row_max = json_data.length;
     let col_max = json_data[0]["index"].length;
 
-    //console.log("ex1", r,c,row_max, col_max)
+    console.log("ex1", r,c,row_max, col_max)
     if (direct == "down") {
-           if(td2nd)  { 
-             if ( r2 < row_max -1 ) {
-	         r = r2 + 1;
-                 c = c2 ;
-             } else { return }
-	   } else {
-             if ( r < row_max -1 ) {
-                r = r + 1;
-             } else { return }
-	   }
+        if ( r2 < row_max -1 ) {
+              r = r + 1;
+	      if(td2nd) { c = c2 ;}
+	} else {  return ;}
     } else if (direct == "up") {
-           if(td2nd)  { 
-             if ( r2 > 1 ) {
-	         r = r2 - 1;
-                 c = c2 ;
-             } else { return }
-	   } else {
-             if ( r > 1 ) {
-                r = r - 1;
-             } else { return }
-	   }
-
+        if ( r2 > 1 ) {
+              r = r - 1;
+	      if(td2nd) { c = c2 ;}
+	} else {  return ;}
     } else if (direct == "right") {
-           if(td2nd)  { 
-             if ( c2 < col_max -1 ) {
-	         r = r2 ;
-                 c = c2 + 1;
-             } else { return }
-	   } else {
-             if ( c < col_max -1 ) {
+        if ( c2 < col_max -1 ) {
+           //c = c + 1;
+	   if(td2nd) { 
+	        r = r2 ;
+                c = c2 + 1;
+	    } else {
                 c = c + 1;
-             } else { return }
-	   }
+	    }
+	} else {   return ;}
     } else if (direct == "left") {
-           if(td2nd)  { 
-             if ( c2 > 0 ) {
+        if ( c2 = -1 || c2 > 0  ) {
+              //c = c - 1;
+	      if(td2nd) { 
 	         r = r2 ;
                  c = c2 - 1;
-             } else { return }
-	   } else {
-             if ( c > 0 ) {
-                c = c - 1;
-             } else { return }
-	   }
+	      } else {
+                 c = c - 1;
+	      }
+	} else {  return ;}
     }
+    console.log("ex2", r,c,row_max, col_max)
 
-    console.log("ex", r,c)
     let tdid = "TD_" + r + "_" + c;
     let expand_td = this.table.querySelector("#" + tdid);
+    //this.select_td[0].classList.remove("selected");
+    //this.select_td[0] = next_td;
+    //this.select_td[0].classList.add("selected");
+    //this.select_td[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    //this.select_td[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+
      if (this.select_td[1] != null) {
           this.multi_select_unset();
      }
-     if (this.select_td[0] != expand_td ) {
-       this.select_td[1] = expand_td;
-       this.multi_select_set();
-     } else {
-        console.log("same")
-        this.select_td[0].classList.add("selected");
-     }
+     this.select_td[1] = expand_td;
+     this.multi_select_set();
+
 
   }
   select_id_gen(r1, r2, c1, c2) {
