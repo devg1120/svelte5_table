@@ -35,6 +35,7 @@ export class Table {
   constructor(container_id, width) {
     this.diff_update = true 
     this.container_id = container_id;
+    this.editor_mode = true;
     this.table_width = width;
     this.menu_list = [
       ["next insert row", this.next_insert_row],
@@ -47,6 +48,7 @@ export class Table {
       ["data save", this.data_save],
     ];
     this.td_select_drag_start = false;
+    this.editting = false;
     this.editor = null;
     this.editting_td = null;
     this.freeze_decoded = { c: 0, r: 0 };
@@ -247,6 +249,7 @@ export class Table {
           //td.textContent = table_data[i][j];
           td.innerHTML = table_data[i][j];
           td.classList.add("noselect");
+	  //td.setAttribute('contenteditable', true);
           tr.appendChild(td);
         }
       }
@@ -371,7 +374,8 @@ export class Table {
     this.tds = this.table.querySelectorAll("td");
 
     this.table.addEventListener("keydown", (event) => {
-      if (this.editor != null) { return; }
+      //if (this.editor != null) { return; }
+      if (this.editting ) { return; }
       event.preventDefault();
       event.stopPropagation();
       //https://qiita.com/nishimachikid/items/aca5b037af623e26929e
@@ -874,7 +878,10 @@ export class Table {
     this.tds = this.table.querySelectorAll("td");
     this.tds.forEach((td) => {
       td.removeEventListener("dblclick", null);
+
       td.addEventListener("dblclick", (e) => {
+      //this.editor_mode = true;
+      if (this.editor_mode) {
         if (this.editor != null) {
           let content = this.editor.getContents(true);
           this.editor.destroy();
@@ -884,10 +891,19 @@ export class Table {
 	  this.table_data_save(this.editting_td, content);
           this.editor = null;
           this.editting_td = null;
+        
         }
         this.editor = this.make_editor(td);
         this.editting_td = td;
+        this.editting = true;
+        } else {
+	  td.setAttribute('contenteditable', true);
+          this.editting_td = td;
+          this.editting = true;
+          td.classList.add("editting");
+        }
       });
+
       td.removeEventListener("mousedown", null);
       td.addEventListener("mousedown", (e) => {
         console.log("td mousedown", e.button);
@@ -899,8 +915,15 @@ export class Table {
 	  this.td_index(this.editting_td);
 	  this.table_data_save(this.editting_td, content);
           this.editor = null;
-          this.editting_td = null;
+          //this.editting_td = null;
+          //this.editting = false;
         }
+        if (this.editting_td != null) {
+          this.editting_td.classList.remove("editting");
+          this.editting_td = null;
+	}
+        this.editting = false;
+
         if (e.button !== 0) {
           return;
         }

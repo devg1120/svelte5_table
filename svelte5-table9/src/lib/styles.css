@@ -1,5 +1,9 @@
  @scope (.edittable) {
 
+ .editting {
+   border : 2px solid red;
+ }
+
 .noselect::selection {
   background: transparent;
   color:;
