@@ -371,6 +371,7 @@ export class Table {
     this.tds = this.table.querySelectorAll("td");
 
     this.table.addEventListener("keydown", (event) => {
+      if (this.editor != null) { return; }
       event.preventDefault();
       event.stopPropagation();
       //https://qiita.com/nishimachikid/items/aca5b037af623e26929e
