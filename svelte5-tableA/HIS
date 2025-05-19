@@ -1,5 +1,12 @@
 
 
+
+init   json_data  span
+
+
+table_data.span   set / unset
+
+=====================================
 span reset
 
 result[result.length - 1].push(items[i].fields[key]);

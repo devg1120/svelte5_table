@@ -243,58 +243,10 @@ export class Table {
       }
       table.appendChild(tr);
     }
-/*
-    for (var i = 0; i < table_data.length; i++) {
-      for (var j = 0; j < table_data[0].length; j++) {
-        if (i === 0) {
-        } else {
-          if (table_data[i][j].span) {
-              console.log("span", this.container_id, i,j);
-           }
-        }
-      }
-    }
-*/
     this.container.appendChild(menu);
     this.container.appendChild(table);
   }
 
-  table_span(table_data) {
-    for (var i = 0; i < table_data.length; i++) {
-      for (var j = 0; j < table_data[0].length; j++) {
-        if (i === 0) {
-        } else {
-          if (table_data[i][j].span) {
-              console.log("span", this.container_id, i,j);
-              let colspan = 1;
-              let rowspan = 1;
-              if (table_data[i][j].span.colspan) {
-                 colspan = parseInt(table_data[i][j].span.colspan);
-              }
-              if (table_data[i][j].span.rowspan) {
-                 rowspan = parseInt(table_data[i][j].span.rowspan);
-              }
-              let td = this.table.querySelector("#TD_" + String(i) + "_" + String(j));
-
-              //this.span_set_remove_td(r1,c1, r2, c2);
-              this.span_set_remove_td(i, j, i + rowspan -1, j + colspan -1);
-
-              if ( colspan > 0 && rowspan > 0 ) {
-                 td.setAttribute("colspan", colspan);
-                 td.setAttribute("rowspan", rowspan);
-              } else if ( colspan > 0 && rowspan <= 0 ) {
-                 td.setAttribute("colspan", colspan);
-              } else if ( colspan <= 0 && rowspan > 0 ) {
-                 td.setAttribute("rowspan", rowspan);
-              }
-           }
-        }
-      }
-    }
-
-
-
-  }
   table_update(table_data) {
 
     if (this.diff_update) {
@@ -512,7 +464,6 @@ export class Table {
 
     this.menu_setup();
     this.table_setid();
-    this.table_span(this.table_data);
     this.setTdWidth(this.table);
     this.createResizeColDiv();
     this.createResizeRowDiv();
@@ -810,8 +761,8 @@ export class Table {
      }
   }
   span_set = () => {
+    console.log("span set");
     if (this.select_td[0] != null && this.select_td[1] ) {
-       console.log("span set");
        let param1 = this.select_td[0].id.split("_");
        let param2 = this.select_td[1].id.split("_");
        let r1 = parseInt(param1[1]);
