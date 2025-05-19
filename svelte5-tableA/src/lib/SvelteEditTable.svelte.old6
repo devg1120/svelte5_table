@@ -832,17 +832,6 @@ export class Table {
           this.select_td[0].setAttribute("rowspan", rowspan);
        }
        this.select_td[1] = null;
-
-
-       json_data[0].update = "span_set " + r1 +  " " + c1;
-       json_data[0].update_source = this.container_id;
-       let span = { r: r1, c: c1, colspan: colspan, rowspan:rowspan };
-       if ( json_data[0]["span"] ) {
-            json_data[0]["span"].push(span);
-       } else {
-            json_data[0]["span"] = [ span ];
-       }
-
     }
 
   }
@@ -906,18 +895,6 @@ export class Table {
        } else if (colspan == null && rowspan == null) {
 
        }
-
-       json_data[0].update = "span_reset " + r +  " " + c;
-       json_data[0].update_source = this.container_id;
-       if ( json_data[0]["span"] ) {
-            let arr = json_data[0]["span"];
-            for (let i = 0 ; i < arr.length; i++) {
-               if ( arr[i].c == c && arr[i].r == r ) {
-                      console.log("delete span");
-                      arr.splice(i,1);
-               }
-            }
-       } 
 
   }
 
