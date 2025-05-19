@@ -41,8 +41,7 @@ export class Table {
       ["prev insert row", this.prev_insert_row],
       ["left insert col", this.left_insert_col],
       ["right insert col", this.right_insert_col],
-      ["span set"       , this.span_set],
-      ["span reset"       , this.span_reset],
+      ["span toggle"       , this.span_toggle],
       ["freeze on " , this.freeze_on],
       ["freeze off ", this.freeze_off],
       ["editor_mode toggle", this.editor_mode_toggle],
@@ -739,8 +738,7 @@ export class Table {
     this.freeze_decoded = { c:0,r:0};
     this.table_freeze();
   }
-
-  span_set_remove_td(r1, c1, r2, c2) {
+  span_remove_td(r1, c1, r2, c2) {
      console.log(r1, c1, r2, c2);
      //return;
      for ( let r = r1 ;  r <= r2 ; r++) {
@@ -754,8 +752,8 @@ export class Table {
         }
      }
   }
-  span_set = () => {
-    console.log("span set");
+  span_toggle = () => {
+    console.log("span");
     if (this.select_td[0] != null && this.select_td[1] ) {
        let param1 = this.select_td[0].id.split("_");
        let param2 = this.select_td[1].id.split("_");
@@ -766,7 +764,7 @@ export class Table {
        let colspan = c2 - c1 + 1;
        let rowspan = r2 - r1 + 1;
        console.log(colspan, rowspan);
-       this.span_set_remove_td(r1,c1, r2, c2);
+       this.span_remove_td(r1,c1, r2, c2);
        if ( colspan > 0 && rowspan > 0 ) {
           this.select_td[0].setAttribute("colspan", colspan);
           this.select_td[0].setAttribute("rowspan", rowspan);
@@ -777,67 +775,6 @@ export class Table {
        }
        this.select_td[1] = null;
     }
-
-  }
-
-  span_reset_insert_td(r, c, lr, lc) {
-    console.log("span_reset_insert_td",r, c, lr, lc);
-    let tr_list = [];
-    this.table.childNodes.forEach((tr) => {
-      if (tr.nodeName == "TR") {
-           tr_list.push(tr);
-      }
-    });
-    console.dir(tr_list)
-    for ( let y = r   ; y < r + lr; y++){ 
-        for ( let x = c   ; x < c + lc; x++){ 
-              console.log(y, x);
-            if (y == r && x == c) {
-            } else {
-              console.log("insert");
-              let td = tr_list[y].insertCell(x);
-              td.classList.add("noselect");
-              td.style = "z-index: 0;";
-            }
-        }
-    }
-    this.table_setid();
-  }
-
-  span_reset = () => {
-       console.log("span reset", this.select_td[0].id);
-       console.log("colspan", this.select_td[0].getAttribute("colspan"));
-       console.log("rowspan", this.select_td[0].getAttribute("rowspan"));
-
-       let param = this.select_td[0].id.split("_");
-       let r = parseInt(param[1]);
-       let c = parseInt(param[2]);
-
-       let colspan = this.select_td[0].getAttribute("colspan");
-       let rowspan = this.select_td[0].getAttribute("rowspan");
-
-       if (colspan != null && rowspan != null) {
-          this.select_td[0].removeAttribute("colspan");
-          this.select_td[0].removeAttribute("rowspan");
-          let lc = parseInt(colspan);
-          let lr = parseInt(rowspan);
-          this.span_reset_insert_td(r, c, lr, lc);
-
-       } else if (colspan != null && rowspan == null) {
-          this.select_td[0].removeAttribute("colspan");
-          let lc = parseInt(colspan);
-          let lr = 0;
-          this.span_reset_insert_td(r, c, lr, lc);
-
-       } else if (colspan == null && rowspan != null) {
-          this.select_td[0].removeAttribute("rowspan");
-          let lc = 0;
-          let lr = parseInt(rowspan);
-          this.span_reset_insert_td(r, c, lr, lc);
-
-       } else if (colspan == null && rowspan == null) {
-
-       }
 
   }
 
@@ -1084,8 +1021,7 @@ export class Table {
     let row_max = json_data.length;
     let col_max = json_data[0]["index"].length;
     //console.log(r,c,row_max, col_max)
-let next_td = null;
-while(true){
+
     if (direct == "down") {
         if ( r < row_max -1 ) {
               r = r + 1;
@@ -1106,11 +1042,7 @@ while(true){
     console.log(r,c,row_max, col_max)
 
     let tdid = "TD_" + r + "_" + c;
-    //let next_td = this.table.querySelector("#" + tdid);
-    next_td = this.table.querySelector("#" + tdid);
-   if (next_td != null) { break;}
-}
-
+    let next_td = this.table.querySelector("#" + tdid);
     this.select_td[0].classList.remove("selected");
     this.select_td[0] = next_td;
     this.select_td[0].classList.add("selected");

@@ -41,17 +41,12 @@ export class Table {
       ["prev insert row", this.prev_insert_row],
       ["left insert col", this.left_insert_col],
       ["right insert col", this.right_insert_col],
-      ["span set"       , this.span_set],
-      ["span reset"       , this.span_reset],
       ["freeze on " , this.freeze_on],
       ["freeze off ", this.freeze_off],
-      ["editor_mode toggle", this.editor_mode_toggle],
       ["data dump", this.data_dump],
       ["data save", this.data_save],
     ];
     this.td_select_drag_start = false;
-    this.editor_mode = true;
-    this.editting = false;
     this.editor = null;
     this.editting_td = null;
     this.freeze_decoded = { c: 0, r: 0 };
@@ -160,6 +155,30 @@ export class Table {
   }
 
   table_json_to_array(items) {
+    //let items = JSON.parse(json);
+/*
+    var index = {};
+    var result = [];
+
+    result.push([]);
+    for (var key in items[0].index) {
+      index[key] = items[0].index[key];
+    }
+    for (var key in items[0].title) {
+      result[result.length - 1].push(items[0].title[key]);
+    }
+    var i = 0;
+    while (i < items.length) {
+      if (items[i].fields) {
+        result.push([]);
+        for (var key in index) {
+          result[result.length - 1].push(items[i].fields[key]);
+        }
+      }
+      i++;
+    }
+*/
+    //var index = {};
     var index = [];
     var result = [];
 
@@ -170,8 +189,7 @@ export class Table {
     index = items[0].index;
     //for (var key in items[0].title) {
     for (const key of index) {
-      //result[result.length - 1].push(items[0].title[key]);
-      result[result.length - 1].push({value: items[0].title[key]});
+      result[result.length - 1].push(items[0].title[key]);
     }
     var i = 0;
     while (i < items.length) {
@@ -179,13 +197,11 @@ export class Table {
         result.push([]);
         //for (var key in index) {
         for (const key of index) {
-          //result[result.length - 1].push(items[i].fields[key]);
-          result[result.length - 1].push({ value: items[i].fields[key]});
+          result[result.length - 1].push(items[i].fields[key]);
         }
       }
       i++;
     }
-    console.dir(result);
     return result;
   }
 
@@ -224,14 +240,13 @@ export class Table {
       for (var j = 0; j < table_data[0].length; j++) {
         if (i === 0) {
           var th = document.createElement("th");
-          th.textContent = table_data[i][j].value;
+          th.textContent = table_data[i][j];
           tr.appendChild(th);
         } else {
           var td = document.createElement("td");
           //td.textContent = table_data[i][j];
-          td.innerHTML = table_data[i][j].value;
+          td.innerHTML = table_data[i][j];
           td.classList.add("noselect");
-	  //td.setAttribute('contenteditable', true);
           tr.appendChild(td);
         }
       }
@@ -249,13 +264,12 @@ export class Table {
           if (i === 0) {
             if (table_data[i][j] != this.table_data[i][j]) {
               var th = this.table.querySelector("#TH_0_" + String(j));
-              //th.textContent = table_data[i][j];
-              th.textContent = table_data[i][j].value;
+              th.textContent = table_data[i][j];
             }
           } else {
             if (table_data[i][j] != this.table_data[i][j]) {
               var td = this.table.querySelector("#TD_" + String(i) + "_" + String(j));
-              td.innerHTML = table_data[i][j].value;
+              td.innerHTML = table_data[i][j];
             }
           }
         }
@@ -266,11 +280,11 @@ export class Table {
         for (var j = 0; j < table_data[0].length; j++) {
           if (i === 0) {
             var th = this.table.querySelector("#TH_0_" + String(j));
-            th.textContent = table_data[i][j].value;
+            th.textContent = table_data[i][j];
           } else {
             var td = this.table.querySelector("#TD_" + String(i) + "_" + String(j));
             //td.textContent = table_data[i][j];
-            td.innerHTML = table_data[i][j].value;
+            td.innerHTML = table_data[i][j];
           }
         }
       }
@@ -357,29 +371,6 @@ export class Table {
     this.tds = this.table.querySelectorAll("td");
 
     this.table.addEventListener("keydown", (event) => {
-      if (event.key == "Escape" && this.editting) {
-        if (this.editor != null) {
-          let content = this.editor.getContents(true);
-          this.editor.destroy();
-          this.editting_td.innerHTML = content;
-          this.editting_td.style.display = "";
-	  this.td_index(this.editting_td);
-	  this.table_data_save(this.editting_td, content);
-          this.editor = null;
-          //this.editting_td = null;
-          //this.editting = false;
-          this.editting = false;
-        }
-          if (this.editting_td != null) {
-           this.editting_td.setAttribute('contenteditable', true);
-           this.editting_td.classList.remove("editting");
-           this.editting_td = null;
-	  }
-	  return
-
-      }
-      //if (this.editor != null) { return; }
-      if (this.editting ) { return; }
       event.preventDefault();
       event.stopPropagation();
       //https://qiita.com/nishimachikid/items/aca5b037af623e26929e
@@ -739,111 +730,6 @@ export class Table {
     this.freeze_decoded = { c:0,r:0};
     this.table_freeze();
   }
-
-  span_set_remove_td(r1, c1, r2, c2) {
-     console.log(r1, c1, r2, c2);
-     //return;
-     for ( let r = r1 ;  r <= r2 ; r++) {
-         for ( let c = c1 ;  c <= c2 ; c++) {
-	     if ( r == r1 && c == c1 ) {
-	     } else {
-	      console.log("del", r, c);
-              let td = this.table.querySelector("#TD_" + String(r) + "_" + String(c));
-	      td.remove();
-	      }
-        }
-     }
-  }
-  span_set = () => {
-    console.log("span set");
-    if (this.select_td[0] != null && this.select_td[1] ) {
-       let param1 = this.select_td[0].id.split("_");
-       let param2 = this.select_td[1].id.split("_");
-       let r1 = parseInt(param1[1]);
-       let c1 = parseInt(param1[2]);
-       let r2 = parseInt(param2[1]);
-       let c2 = parseInt(param2[2]);
-       let colspan = c2 - c1 + 1;
-       let rowspan = r2 - r1 + 1;
-       console.log(colspan, rowspan);
-       this.span_set_remove_td(r1,c1, r2, c2);
-       if ( colspan > 0 && rowspan > 0 ) {
-          this.select_td[0].setAttribute("colspan", colspan);
-          this.select_td[0].setAttribute("rowspan", rowspan);
-       } else if ( colspan > 0 && rowspan <= 0 ) {
-          this.select_td[0].setAttribute("colspan", colspan);
-       } else if ( colspan <= 0 && rowspan > 0 ) {
-          this.select_td[0].setAttribute("rowspan", rowspan);
-       }
-       this.select_td[1] = null;
-    }
-
-  }
-
-  span_reset_insert_td(r, c, lr, lc) {
-    console.log("span_reset_insert_td",r, c, lr, lc);
-    let tr_list = [];
-    this.table.childNodes.forEach((tr) => {
-      if (tr.nodeName == "TR") {
-           tr_list.push(tr);
-      }
-    });
-    console.dir(tr_list)
-    for ( let y = r   ; y < r + lr; y++){ 
-        for ( let x = c   ; x < c + lc; x++){ 
-              console.log(y, x);
-            if (y == r && x == c) {
-            } else {
-              console.log("insert");
-              let td = tr_list[y].insertCell(x);
-              td.classList.add("noselect");
-              td.style = "z-index: 0;";
-            }
-        }
-    }
-    this.table_setid();
-  }
-
-  span_reset = () => {
-       console.log("span reset", this.select_td[0].id);
-       console.log("colspan", this.select_td[0].getAttribute("colspan"));
-       console.log("rowspan", this.select_td[0].getAttribute("rowspan"));
-
-       let param = this.select_td[0].id.split("_");
-       let r = parseInt(param[1]);
-       let c = parseInt(param[2]);
-
-       let colspan = this.select_td[0].getAttribute("colspan");
-       let rowspan = this.select_td[0].getAttribute("rowspan");
-
-       if (colspan != null && rowspan != null) {
-          this.select_td[0].removeAttribute("colspan");
-          this.select_td[0].removeAttribute("rowspan");
-          let lc = parseInt(colspan);
-          let lr = parseInt(rowspan);
-          this.span_reset_insert_td(r, c, lr, lc);
-
-       } else if (colspan != null && rowspan == null) {
-          this.select_td[0].removeAttribute("colspan");
-          let lc = parseInt(colspan);
-          let lr = 0;
-          this.span_reset_insert_td(r, c, lr, lc);
-
-       } else if (colspan == null && rowspan != null) {
-          this.select_td[0].removeAttribute("rowspan");
-          let lc = 0;
-          let lr = parseInt(rowspan);
-          this.span_reset_insert_td(r, c, lr, lc);
-
-       } else if (colspan == null && rowspan == null) {
-
-       }
-
-  }
-
-  editor_mode_toggle = () => {
-     this.editor_mode = !this.editor_mode;
-  }
   data_dump = () => {
     this.contextMenu.classList.remove("visible");
     console.log("data_dump", this.container_id);
@@ -987,10 +873,7 @@ export class Table {
     this.tds = this.table.querySelectorAll("td");
     this.tds.forEach((td) => {
       td.removeEventListener("dblclick", null);
-
       td.addEventListener("dblclick", (e) => {
-      //this.editor_mode = true;
-      if (this.editor_mode) {
         if (this.editor != null) {
           let content = this.editor.getContents(true);
           this.editor.destroy();
@@ -1000,19 +883,10 @@ export class Table {
 	  this.table_data_save(this.editting_td, content);
           this.editor = null;
           this.editting_td = null;
-        
         }
         this.editor = this.make_editor(td);
         this.editting_td = td;
-        this.editting = true;
-        } else {
-	  td.setAttribute('contenteditable', true);
-          this.editting_td = td;
-          this.editting = true;
-          td.classList.add("editting");
-        }
       });
-
       td.removeEventListener("mousedown", null);
       td.addEventListener("mousedown", (e) => {
         console.log("td mousedown", e.button);
@@ -1024,16 +898,8 @@ export class Table {
 	  this.td_index(this.editting_td);
 	  this.table_data_save(this.editting_td, content);
           this.editor = null;
-          //this.editting_td = null;
-          //this.editting = false;
-        }
-        if (this.editting_td != null) {
-          this.editting_td.setAttribute('contenteditable', true);
-          this.editting_td.classList.remove("editting");
           this.editting_td = null;
-	}
-        this.editting = false;
-
+        }
         if (e.button !== 0) {
           return;
         }
@@ -1084,8 +950,7 @@ export class Table {
     let row_max = json_data.length;
     let col_max = json_data[0]["index"].length;
     //console.log(r,c,row_max, col_max)
-let next_td = null;
-while(true){
+
     if (direct == "down") {
         if ( r < row_max -1 ) {
               r = r + 1;
@@ -1106,11 +971,7 @@ while(true){
     console.log(r,c,row_max, col_max)
 
     let tdid = "TD_" + r + "_" + c;
-    //let next_td = this.table.querySelector("#" + tdid);
-    next_td = this.table.querySelector("#" + tdid);
-   if (next_td != null) { break;}
-}
-
+    let next_td = this.table.querySelector("#" + tdid);
     this.select_td[0].classList.remove("selected");
     this.select_td[0] = next_td;
     this.select_td[0].classList.add("selected");
@@ -1119,8 +980,8 @@ while(true){
   }
 
   select_expand(direct) {
-    let r2 = -1;
-    let c2 = -1;
+    let r2 = 0;
+    let c2 = 0;
     let td2nd = false;
     let td  = this.select_td[0];
     if (this.select_td[1] != null) {
@@ -1137,67 +998,49 @@ while(true){
     let row_max = json_data.length;
     let col_max = json_data[0]["index"].length;
 
-    //console.log("ex1", r,c,row_max, col_max)
+    console.log("ex1", r,c,row_max, col_max)
     if (direct == "down") {
-           if(td2nd)  { 
-             if ( r2 < row_max -1 ) {
-	         r = r2 + 1;
-                 c = c2 ;
-             } else { return }
-	   } else {
-             if ( r < row_max -1 ) {
-                r = r + 1;
-             } else { return }
-	   }
+        if ( r2 < row_max -1 ) {
+              r = r + 1;
+	      if(td2nd) { c = c2 ;}
+	} else {  return ;}
     } else if (direct == "up") {
-           if(td2nd)  { 
-             if ( r2 > 1 ) {
-	         r = r2 - 1;
-                 c = c2 ;
-             } else { return }
-	   } else {
-             if ( r > 1 ) {
-                r = r - 1;
-             } else { return }
-	   }
-
+        if ( r2 > 1 ) {
+              r = r - 1;
+	      if(td2nd) { c = c2 ;}
+	} else {  return ;}
     } else if (direct == "right") {
-           if(td2nd)  { 
-             if ( c2 < col_max -1 ) {
-	         r = r2 ;
-                 c = c2 + 1;
-             } else { return }
-	   } else {
-             if ( c < col_max -1 ) {
+        if ( c2 < col_max -1 ) {
+           //c = c + 1;
+	   if(td2nd) { 
+	        r = r2 ;
+                c = c2 + 1;
+	    } else {
                 c = c + 1;
-             } else { return }
-	   }
+	    }
+	} else {   return ;}
     } else if (direct == "left") {
-           if(td2nd)  { 
-             if ( c2 > 0 ) {
-	         r = r2 ;
-                 c = c2 - 1;
-             } else { return }
-	   } else {
-             if ( c > 0 ) {
-                c = c - 1;
-             } else { return }
-	   }
+        if ( c2 > 0 ) {
+              c = c - 1;
+	      if(td2nd) { r = r2 ;}
+	} else {  return ;}
     }
+    console.log("ex2", r,c,row_max, col_max)
 
-    console.log("ex", r,c)
     let tdid = "TD_" + r + "_" + c;
     let expand_td = this.table.querySelector("#" + tdid);
+    //this.select_td[0].classList.remove("selected");
+    //this.select_td[0] = next_td;
+    //this.select_td[0].classList.add("selected");
+    //this.select_td[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    //this.select_td[0].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
+
      if (this.select_td[1] != null) {
           this.multi_select_unset();
      }
-     if (this.select_td[0] != expand_td ) {
-       this.select_td[1] = expand_td;
-       this.multi_select_set();
-     } else {
-        console.log("same")
-        this.select_td[0].classList.add("selected");
-     }
+     this.select_td[1] = expand_td;
+     this.multi_select_set();
+
 
   }
   select_id_gen(r1, r2, c1, c2) {
@@ -1283,9 +1126,7 @@ while(true){
     }
     select_list.forEach((id) => {
       const td = this.table.querySelector("#" + id);
-      //if ( td != null) {
-         td.classList.remove("selected");
-     // }
+      td.classList.remove("selected");
     });
     this.select_td[1] = null;
   }
