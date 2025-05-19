@@ -920,7 +920,15 @@ export class Table {
        } 
 
   }
+  sync_span_set(r , c) {
+     console.log(this.container_id, "sync_span_set", r, c);
 
+  }
+
+  sync_span_reset(r , c) {
+     console.log(this.container_id, "sync_span_reset", r, c);
+
+  }
   editor_mode_toggle = () => {
      this.editor_mode = !this.editor_mode;
   }
@@ -1797,6 +1805,16 @@ $effect(() => {
         console.log("right");
         let col_num = parseInt(param[1]);
         table.sync_right_insert_col(col_num);
+     } else if (update_type == "span_set") {
+        console.log("right");
+        let row_num = parseInt(param[1]);
+        let col_num = parseInt(param[2]);
+        table.sync_span_set(row_num, col_num);
+     } else if (update_type == "span_reset") {
+        console.log("right");
+        let row_num = parseInt(param[1]);
+        let col_num = parseInt(param[2]);
+        table.sync_span_reset(row_num, col_num);
      }
    }
  }
