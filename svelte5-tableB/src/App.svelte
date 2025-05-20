@@ -187,7 +187,11 @@ let table6;
           data.push(fields_data);
         }
         //console.log(ost(data));
+        data[0].span = [
+                         {"r": 2, "c": 2, "rowspan":4, "colspan": 3}
+                       ];
         let json_data4 = ost(data);
+        delete data[0].span;
         data[0].freeze = { c: 2, r: 2 };
         let json_data5 = ost(data);
 

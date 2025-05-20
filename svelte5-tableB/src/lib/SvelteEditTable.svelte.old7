@@ -188,7 +188,7 @@ export class Table {
       i++;
     }
     if (items[0].span) {
-      //console.log("span exist");
+      console.log("span exist");
       for (var span of items[0].span) {
          result[span.r][span.c].span = { colspan: span.colspan,  rowspan: span.rowspan };
       }
@@ -267,7 +267,7 @@ export class Table {
         if (i === 0) {
         } else {
           if (table_data[i][j].span) {
-              //console.log("span", this.container_id, i,j);
+              console.log("span", this.container_id, i,j);
               let colspan = 1;
               let rowspan = 1;
               if (table_data[i][j].span.colspan) {
@@ -541,9 +541,6 @@ export class Table {
       return;
     }
 
-    // span clear
-    this.span_clear();
-
     let param = this.select_td[0].id.split("_");
     let row_num = parseInt(param[1]);
     let tr = this.table.insertRow(row_num + 1);
@@ -554,11 +551,6 @@ export class Table {
       newCell.appendChild(newText);
     }
     this.table_setid();
-
-    this.span_shift("next_insert_row", row_num);
-    // span restore
-    this.span_restore();
-
     json_data[0].update = "next-insert-row " + row_num;
     json_data[0].update_source = this.container_id;;
     //let data = json_data[0]["index"]  ;
@@ -587,10 +579,6 @@ export class Table {
     if (this.select_td[0] == null) {
       return;
     }
-
-    // span clear
-    this.span_clear();
-
     let param = this.select_td[0].id.split("_");
     let row_num = parseInt(param[1]);
     let tr = this.table.insertRow(row_num);
@@ -601,10 +589,6 @@ export class Table {
       newCell.appendChild(newText);
     }
     this.table_setid();
-
-    this.span_shift("prev_insert_row", row_num);
-    // span restore
-    this.span_restore();
 
     json_data[0]["update"] = "prev-insert-row " + row_num;
     json_data[0].update_source = this.container_id;;
@@ -622,8 +606,8 @@ export class Table {
 
    let fields =  { "fields": data };
    Array.prototype.splice.apply(json_data,[row_num,0].concat([fields]));
-   //console.log(json_data);
-   //console.log(json_data.length);
+   console.log(json_data);
+   console.log(json_data.length);
    //this. createResizeRowDiv();
    var xDiv = document.createElement("div");
    xDiv.className = "x_resize tb_resize";
@@ -665,9 +649,6 @@ export class Table {
     if (this.select_td[0] == null) {
       return;
     }
-    // span clear
-    this.span_clear();
-
     let param = this.select_td[0].id.split("_");
     let col_num = parseInt(param[2]);
     let r = 0;
@@ -688,10 +669,6 @@ export class Table {
     //setTdWidth(table);
     this.createResizeColDiv();
     this.initEvents(this.table_th);
-
-    this.span_shift("left_insert_col", col_num);
-    // span restore
-    this.span_restore();
 
     json_data[0]["update"] = "left-insert-col " + col_num;
     json_data[0].update_source = this.container_id;;
@@ -718,10 +695,6 @@ export class Table {
     if (this.select_td[0] == null) {
       return;
     }
-
-    // span clear
-    this.span_clear();
-
     let param = this.select_td[0].id.split("_");
     let col_num = parseInt(param[2]);
     let r = 0;
@@ -744,10 +717,6 @@ export class Table {
     //setTdWidth(table);
     this.createResizeColDiv();
     this.initEvents(this.table_th);
-
-    this.span_shift("right_insert_col", col_num);
-    // span restore
-    this.span_restore();
 
     json_data[0]["update"] = "right-insert-col " + col_num;
     json_data[0].update_source = this.container_id;;
@@ -829,12 +798,13 @@ export class Table {
   }
 
   span_set_remove_td(r1, c1, r2, c2) {
-     //console.log(r1, c1, r2, c2);
+     console.log(r1, c1, r2, c2);
      //return;
      for ( let r = r1 ;  r <= r2 ; r++) {
          for ( let c = c1 ;  c <= c2 ; c++) {
 	     if ( r == r1 && c == c1 ) {
 	     } else {
+	      console.log("del", r, c);
               let td = this.table.querySelector("#TD_" + String(r) + "_" + String(c));
 	      td.remove();
 	      }
@@ -887,12 +857,13 @@ export class Table {
            tr_list.push(tr);
       }
     });
-    //console.dir(tr_list)
+    console.dir(tr_list)
     for ( let y = r   ; y < r + lr; y++){ 
         for ( let x = c   ; x < c + lc; x++){ 
-              //console.log(y, x);
+              console.log(y, x);
             if (y == r && x == c) {
             } else {
+              console.log("insert");
               let td = tr_list[y].insertCell(x);
               td.classList.add("noselect");
               td.style = "z-index: 0;";
@@ -964,7 +935,7 @@ export class Table {
 	   let r2 = r1 + rowspan -1;
 	   let c2 = c1 + colspan -1;
 	   let td = this.table.querySelector("#TD_" + String(r1) + "_" + String(c1));
-	   //console.log(rowspan, colspan);
+	   console.log(rowspan, colspan);
            this.span_set_remove_td(r1,c1, r2, c2);
           if (colspan > 1 && rowspan  > 1) {
              td.setAttribute("colspan", colspan);
@@ -978,53 +949,10 @@ export class Table {
           }
        }
     } 
-  }
-
-  span_shift = (direct, num) => {
-
-    if ( json_data[0]["span"] ) {
-       let arr = json_data[0]["span"];
-       for (let i = 0 ; i < arr.length; i++) {
-           let r1 = parseInt(arr[i].r)
-           let c1 = parseInt(arr[i].c)
-           let rowspan = parseInt(arr[i].rowspan)
-           let colspan = parseInt(arr[i].colspan)
-	   let r2 = r1 + rowspan -1;
-	   let c2 = c1 + colspan -1;
-          if (direct == "left_insert_col") {
-              if ( num > c1 && num<=  c2) {
-                   arr[i].colspan += 1;
-              } else if ( num <= c1 ) {
-                   arr[i].c += 1;
-              }
-          } else if (direct == "right_insert_col") {
-              if ( num >= c1 && num <  c2) {
-                   console.log("**colspan + 1");
-                   arr[i].colspan += 1;
-              } else if ( num < c1 ) {
-                   arr[i].c += 1;
-              }
-
-          } else if (direct == "prev_insert_row") {
-              if ( num > r1 && num <=  r2) {
-                   arr[i].rowspan += 1;
-              } else if ( num <= r1 ) {
-                   arr[i].r += 1;
-              }
-          } else if (direct == "next_insert_row") {
-              if ( num >= r1 && num<  r2) {
-                   arr[i].rowspan += 1;
-              } else if ( num < r1 ) {
-                   arr[i].r += 1;
-              }
-          } else {
-                console.log("span_shift direct unknown", direct);
-          }
-       }
-    } 
 
 
   }
+
   span_clear = () => {
     if ( json_data[0]["span"] ) {
        let arr = json_data[0]["span"];
@@ -1034,7 +962,7 @@ export class Table {
            let rowspan = parseInt(arr[i].rowspan)
            let colspan = parseInt(arr[i].colspan)
 	   let td = this.table.querySelector("#TD_" + String(r) + "_" + String(c));
-	   //console.log(rowspan, colspan);
+	   console.log(rowspan, colspan);
           if (colspan > 1 && rowspan  > 1) {
              td.removeAttribute("colspan");
              td.removeAttribute("rowspan");
@@ -1235,7 +1163,7 @@ export class Table {
 
       td.removeEventListener("mousedown", null);
       td.addEventListener("mousedown", (e) => {
-        //console.log("td mousedown", e.button);
+        console.log("td mousedown", e.button);
         if (this.editor != null) {
           let content = this.editor.getContents(true);
           this.editor.destroy();
