@@ -188,7 +188,7 @@ let table6;
         }
         //console.log(ost(data));
         data[0].span = [
-                         {"r": 2, "c": 2, "rowspan":4, "colspan": 3}
+                         {"r": 4, "c": 2, "rowspan":4, "colspan": 3}
                        ];
         let json_data4 = ost(data);
         delete data[0].span;
