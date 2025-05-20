@@ -632,6 +632,10 @@ export class Table {
   };
 
   sync_next_insert_row = (row_num) => {
+
+    // span clear
+    this.span_clear()
+
     let tr = this.table.insertRow(row_num + 1);
     tr.style.height = "35px";
     for (let c = 0; c < this.table_cells(); c++) {
@@ -640,12 +644,21 @@ export class Table {
       newCell.appendChild(newText);
     }
     this.table_setid();
+
+
    var xDiv = document.createElement("div");
    xDiv.className = "x_resize tb_resize";
    xDiv.setAttribute("data-resizerow", json_data.length);
    this.container.append(xDiv);
+    // span restore
+    this.span_restore();
   };
+
   sync_prev_insert_row = (row_num) => {
+
+    // span clear
+    this.span_clear()
+
     let tr = this.table.insertRow(row_num);
     tr.style.height = "35px";
     for (let c = 0; c < this.table_cells(); c++) {
@@ -654,10 +667,14 @@ export class Table {
       newCell.appendChild(newText);
     }
     this.table_setid();
+
+
    var xDiv = document.createElement("div");
    xDiv.className = "x_resize tb_resize";
    xDiv.setAttribute("data-resizerow", json_data.length);
    this.container.append(xDiv);
+    // span restore
+    this.span_restore();
   };
 
   left_insert_col = () => {
@@ -766,6 +783,8 @@ export class Table {
   };
 
   sync_left_insert_col = (col_num) => {
+    // span clear
+    this.span_clear()
     let r = 0;
     this.table.childNodes.forEach((tr) => {
       if (tr.nodeName == "TR") {
@@ -780,13 +799,18 @@ export class Table {
       }
     });
     this.table_setid();
+    //this.span_restore();
     this.table_th = this.table.getElementsByTagName("th");
     //setTdWidth(table);
     this.createResizeColDiv();
     this.initEvents(this.table_th);
+    // span restore
+    this.span_restore();
   };
 
   sync_right_insert_col = (col_num) => {
+    // span clear
+    this.span_clear()
     let r = 0;
     this.table.childNodes.forEach((tr) => {
       if (tr.nodeName == "TR") {
@@ -807,6 +831,8 @@ export class Table {
     //setTdWidth(table);
     this.createResizeColDiv();
     this.initEvents(this.table_th);
+    // span restore
+    this.span_restore();
 
   };
 
