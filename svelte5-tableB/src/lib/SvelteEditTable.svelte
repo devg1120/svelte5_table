@@ -938,7 +938,8 @@ export class Table {
 
        }
 
-       json_data[0].update = "span_reset " + r +  " " + c;
+       //json_data[0].update = "span_reset " + r +  " " + c;
+       json_data[0].update = "span_reset " + r +  " " + c + " " + rowspan + " " + colspan;
        json_data[0].update_source = this.container_id;
        if ( json_data[0]["span"] ) {
             let arr = json_data[0]["span"];
@@ -1054,11 +1055,84 @@ export class Table {
 
   sync_span_set(r , c) {
      console.log(this.container_id, "sync_span_set", r, c);
+   if ( json_data[0]["span"] ) {
+       let arr = json_data[0]["span"];
+       for (let i = 0 ; i < arr.length; i++) {
+           let r1 = arr[i].r
+           let c1 = arr[i].c
+           if ( r == r1 && c == c1 ) {
+                let rowspan = parseInt(arr[i].rowspan)
+                let colspan = parseInt(arr[i].colspan)
+                let r2 = r1 + rowspan -1;
+                let c2 = c1 + colspan -1;
+                let td = this.table.querySelector("#TD_" + String(r1) + "_" + String(c1));
+                //console.log(rowspan, colspan);
+                this.span_set_remove_td(r1,c1, r2, c2);
+               if (colspan > 1 && rowspan  > 1) {
+                  td.setAttribute("colspan", colspan);
+                  td.setAttribute("rowspan", rowspan);
+               } else if (colspan > 1 && rowspan <= 1) {
+                  td.setAttribute("colspan", colspan);
+               } else if (colspan <= 1 && rowspan > 1) {
+                  td.setAttribute("rowspan", rowspan);
+               } else if (colspan <= 1 && rowspan <= 1) {
+   
+               }
+               break;
+           }
+       }
+    } 
 
   }
 
-  sync_span_reset(r , c) {
+  sync_span_reset(r , c, rowspan, colspan) {
      console.log(this.container_id, "sync_span_reset", r, c);
+	 let td = this.table.querySelector("#TD_" + String(r) + "_" + String(c));
+	 //console.log(rowspan, colspan);
+         if (colspan > 1 && rowspan  > 1) {
+            td.removeAttribute("colspan");
+            td.removeAttribute("rowspan");
+            this.span_reset_insert_td(r, c, rowspan, colspan);
+         } else if (colspan > 1 && rowspan <= 1) {
+            td.removeAttribute("colspan");
+            this.span_reset_insert_td(r, c, 1, colspan);
+         } else if (colspan <= 1 && rowspan > 1) {
+            td.removeAttribute("rowspan");
+            this.span_reset_insert_td(r, c, rowspan, 1);
+         } else if (colspan <= 1 && rowspan <= 1) {
+   
+         }
+    } 
+
+  sync_span_reset_old(r , c) {
+     console.log(this.container_id, "sync_span_reset", r, c);
+    if ( json_data[0]["span"] ) {
+       let arr = json_data[0]["span"];
+       for (let i = 0 ; i < arr.length; i++) {
+           let r1 = arr[i].r
+           let c1 = arr[i].c
+           if ( r == r1 && c == c1 ) {
+               console.log("**** span reset");
+               let rowspan = parseInt(arr[i].rowspan)
+               let colspan = parseInt(arr[i].colspan)
+	       let td = this.table.querySelector("#TD_" + String(r1) + "_" + String(c1));
+	       //console.log(rowspan, colspan);
+               if (colspan > 1 && rowspan  > 1) {
+                  td.removeAttribute("colspan");
+                  td.removeAttribute("rowspan");
+                  this.span_reset_insert_td(r1, c1, rowspan, colspan);
+               } else if (colspan > 1 && rowspan <= 1) {
+                  td.removeAttribute("colspan");
+                  this.span_reset_insert_td(r1, c1, 1, colspan);
+               } else if (colspan <= 1 && rowspan > 1) {
+                  td.removeAttribute("rowspan");
+                  this.span_reset_insert_td(r1, c1, rowspan, 1);
+               } else if (colspan <= 1 && rowspan <= 1) {
+   
+               }
+            }
+       }
+    } 
 
   }
   editor_mode_toggle = () => {
@@ -1915,7 +1989,7 @@ $effect(() => {
  } else {
    if (json_data[0].update_source != container_id) {
      console.log(table.container_id, "update....", json_data[0].update);
-     console.log(json_data);
+     //console.log(json_data);
      let param = json_data[0].update.split(" ");
      let update_type = param[0];
      if (update_type == "value-change") {
@@ -1946,7 +2020,9 @@ $effect(() => {
         console.log("right");
         let row_num = parseInt(param[1]);
         let col_num = parseInt(param[2]);
-        table.sync_span_reset(row_num, col_num);
+        let rowspan = parseInt(param[3]);
+        let colspan = parseInt(param[4]);
+        table.sync_span_reset(row_num, col_num, rowspan, colspan);
      }
    }
  }
