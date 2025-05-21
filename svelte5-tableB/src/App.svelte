@@ -284,7 +284,8 @@ table tr th {
   <table><tbody>
   <tr>
    <td>table1</td> 
-   <td><button onclick={() => json_data_dump(data1)}>dump</button></td>
+   <td><button onclick={() => json_data_dump(data1)}>json_data</button></td>
+   <td><button onclick={() => table_data_dump(table1)}>table_data</button></td>
   </tr>
   </tbody></table>
   <div class="edittable">
@@ -294,7 +295,8 @@ table tr th {
   <table><tbody>
   <tr>
    <td>table2</td> 
-   <td><button onclick={() => json_data_dump(data2)}>dump</button></td>
+   <td><button onclick={() => json_data_dump(data2)}>json_data</button></td>
+   <td><button onclick={() => table_data_dump(table2)}>table_data</button></td>
   </tr>
   </tbody></table>
   <div class="edittable">
@@ -315,7 +317,8 @@ table tr th {
   <table><tbody>
   <tr>
    <td>table4</td> 
-   <td><button onclick={() => json_data_dump(data4)}>dump</button></td>
+   <td><button onclick={() => json_data_dump(data4)}>json_data</button></td>
+   <td><button onclick={() => table_data_dump(table4)}>table_data</button></td>
   </tr>
   </tbody></table>
   <div class="edittable">
@@ -327,7 +330,8 @@ table tr th {
   <table><tbody>
   <tr>
    <td>table5</td> 
-   <td><button onclick={() => json_data_dump(data5)}>dump</button></td>
+   <td><button onclick={() => json_data_dump(data5)}>json_data</button></td>
+   <td><button onclick={() => table_data_dump(table5)}>table_data</button></td>
   </tr>
   </tbody></table>
   <div class="edittable">
@@ -339,7 +343,8 @@ table tr th {
   <table><tbody>
   <tr>
    <td>table6</td> 
-   <td><button onclick={() => json_data_dump(data5)}>dump</button></td>
+   <td><button onclick={() => json_data_dump(data5)}>json_data</button></td>
+   <td><button onclick={() => table_data_dump(table6)}>table_data</button></td>
   </tr>
   </tbody></table>
   <div class="edittable">

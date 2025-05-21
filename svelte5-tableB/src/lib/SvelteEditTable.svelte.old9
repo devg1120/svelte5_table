@@ -298,7 +298,7 @@ export class Table {
 
   }
   table_update(table_data) {
-    console.log("table_update");
+
     if (this.diff_update) {
       for (var i = 0; i < table_data.length; i++) {
         for (var j = 0; j < table_data[0].length; j++) {
@@ -381,7 +381,7 @@ export class Table {
 
   init(json) {
     //if (!this.json_syntax_check(json)) {
-    //console.log("ERROR", this.container_id);
+    //  console.log("ERROR", this.container_id);
     //  return;
     //}
 
@@ -441,48 +441,48 @@ export class Table {
       //https://qiita.com/nishimachikid/items/aca5b037af623e26929e
       //console.log("key:", this.container_id, event.key);
          if (event.key == "ArrowDown") {
-	    // console.log("down");
+	     console.log("down");
 	     if (!event.shiftKey) {
 	        this.select_move("down");
 	     } else {
 	        this.select_expand("down");
 	     }
          } else if (event.key == "ArrowUp") {
-	    // console.log("up");
+	     console.log("up");
 	     if (!event.shiftKey) {
 	        this.select_move("up");
 	     } else {
 	        this.select_expand("up");
 	     }
          } else if (event.key == "ArrowRight") {
-	     //console.log("right");
+	     console.log("right");
 	     if (!event.shiftKey) {
 	        this.select_move("right");
 	     } else {
 	        this.select_expand("right");
 	     }
          } else if (event.key == "ArrowLeft") {
-	     //console.log("left");
+	     console.log("left");
 	     if (!event.shiftKey) {
 	        this.select_move("left");
 	     } else {
 	        this.select_expand("left");
 	     }
          } else if (event.key == "Escape") {
-	     //console.log("esc");
+	     console.log("esc");
 	     this.select_escape();
          } else if (event.key == "Control") {
-	     //console.log("ctl");
+	     console.log("ctl");
          } else if (event.key == "Alt") {
-	     //console.log("alt");
+	     console.log("alt");
          } else if (event.key == "Shift") {
-	     //console.log("shift");
+	     console.log("shift");
          } else if (event.key == "Enter") {
-	     //console.log("enter");
+	     console.log("enter");
          } else if (event.key == "Backspace") {
-	     //console.log("bs");
+	     console.log("bs");
          } else if (event.key == "Delete") {
-	     //console.log("delete");
+	     console.log("delete");
 	 }
     });
 
@@ -535,7 +535,7 @@ export class Table {
   }
 
   next_insert_row = () => {
-    //console.log("next_insert_row")
+    console.log("next_insert_row")
     this.contextMenu.classList.remove("visible");
     if (this.select_td[0] == null) {
       return;
@@ -582,7 +582,7 @@ export class Table {
   };
 
   prev_insert_row = () => {
-    //console.log("prev_insert_row")
+    console.log("prev_insert_row")
     this.contextMenu.classList.remove("visible");
     if (this.select_td[0] == null) {
       return;
@@ -849,7 +849,7 @@ export class Table {
 
   }
   freeze_off = () => {
-    //console.log("freeze off", this.freeze_decoded, this.select_td );
+    console.log("freeze off", this.freeze_decoded, this.select_td );
     this.freeze_decoded = { c:0,r:0};
     this.table_freeze();
   }
@@ -880,7 +880,6 @@ export class Table {
        let rowspan = r2 - r1 + 1;
        //console.log(colspan, rowspan);
        this.table_data[r1][c1].span = {colspan: colspan,  rowspan: rowspan};
-       console.log("span_set", this.container_id, this.table_data[r1][c1].span );
        this.span_set_remove_td(r1,c1, r2, c2);
        if ( colspan > 0 && rowspan > 0 ) {
           this.select_td[0].setAttribute("colspan", colspan);
@@ -907,7 +906,7 @@ export class Table {
   }
 
   span_reset_insert_td(r, c, lr, lc) {
-    //console.log("span_reset_insert_td",r, c, lr, lc);
+    console.log("span_reset_insert_td",r, c, lr, lc);
     let tr_list = [];
     this.table.childNodes.forEach((tr) => {
       if (tr.nodeName == "TR") {
@@ -930,9 +929,9 @@ export class Table {
   }
 
   span_reset = () => {
-      console.log("span reset", this.select_td[0].id);
-       //console.log("colspan", this.select_td[0].getAttribute("colspan"));
-       //console.log("rowspan", this.select_td[0].getAttribute("rowspan"));
+       console.log("span reset", this.select_td[0].id);
+       console.log("colspan", this.select_td[0].getAttribute("colspan"));
+       console.log("rowspan", this.select_td[0].getAttribute("rowspan"));
 
        let param = this.select_td[0].id.split("_");
        let r = parseInt(param[1]);
@@ -972,7 +971,7 @@ export class Table {
             let arr = json_data[0]["span"];
             for (let i = 0 ; i < arr.length; i++) {
                if ( arr[i].c == c && arr[i].r == r ) {
-                      //console.log("delete span");
+                      console.log("delete span");
                       arr.splice(i,1);
                }
             }
@@ -1029,6 +1028,7 @@ export class Table {
               }
           } else if (direct == "right_insert_col") {
               if ( num >= c1 && num <  c2) {
+                   console.log("**colspan + 1");
                    arr[i].colspan += 1;
               } else if ( num < c1 ) {
                    arr[i].c += 1;
@@ -1117,7 +1117,6 @@ export class Table {
                 let colspan = parseInt(arr[i].colspan)
                 let r2 = r1 + rowspan -1;
                 let c2 = c1 + colspan -1;
-	         this.table_data[r1][c1].span = {colspan: colspan,  rowspan: rowspan};
                 let td = this.table.querySelector("#TD_" + String(r1) + "_" + String(c1));
                 //console.log(rowspan, colspan);
                 this.span_set_remove_td(r1,c1, r2, c2);
@@ -1450,7 +1449,7 @@ while(true){
               c = c - 1;
 	} else {  return ;}
     }
-    //console.log(r,c,row_max, col_max)
+    console.log(r,c,row_max, col_max)
 
     let tdid = "TD_" + r + "_" + c;
     //let next_td = this.table.querySelector("#" + tdid);
