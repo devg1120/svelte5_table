@@ -413,6 +413,9 @@ export class Table {
     this.tds = this.table.querySelectorAll("td");
 
     this.table.addEventListener("keydown", (event) => {
+      if (event.key == "Escape")  {
+        this.contextMenu.classList.remove("visible");
+      }
       if (event.key == "Escape" && this.editting) {
         if (this.editor != null) {
           let content = this.editor.getContents(true);
