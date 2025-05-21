@@ -491,11 +491,45 @@ export class Table {
       event.stopPropagation();
 
       const { clientX: mouseX, clientY: mouseY } = event;
+      const dw = document.documentElement.clientWidth;
+      const dh = document.documentElement.clientHeight;
+      const mw = this.contextMenu.offsetWidth;
+      const mh = this.contextMenu.offsetHeight;
+
+      //console.log("menu", mouseX, mouseY, dw, dh, mw, mh);
+
+      let shiftX = 0;
+      let shiftY = 0;
+      if ( mouseX + mw < dw ) {
+         // show right
+          if ( mouseY + mh < dh ) {
+	   // show bottom
+	   //console.log("* right-bottom")
+	   // --
+	  } else {
+	   // show top
+	   // console.log("* right-top")
+	   shiftY = - ((mouseY + mh + 10) -dh)
+	  }
+      } else {
+         // show left
+          if ( mouseY + mh < dh ) {
+	   // show bottom
+	   //console.log("* left-bottom")
+	   shiftX = - ( mw + 30) 
+	  } else {
+	   // show top
+	   //console.log("* left-top")
+	   shiftX = - ((mouseX + mw + 10) -dw)
+	   shiftY = - ((mouseY + mh + 10) -dh)
+	  }
+
+      }
 
       this.contextMenu.classList.remove("visible");
 
-      this.contextMenu.style.top = `${mouseY}px`;
-      this.contextMenu.style.left = `${mouseX}px`;
+      this.contextMenu.style.top = `${mouseY + shiftY }px`;
+      this.contextMenu.style.left = `${mouseX + shiftX }px`;
 
       setTimeout(() => {
         this.contextMenu.classList.add("visible");
