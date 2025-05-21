@@ -1,0 +1,60 @@
+
+
+span-shift
+span-clear  
+span-restore
+
+B
+=======================================
+
+init   json_data  span
+
+
+table_data.span   set / unset
+
+=====================================
+span reset
+
+result[result.length - 1].push(items[i].fields[key]);
+  =>
+  result[result.length - 1].push({ value: items[i].fields[key]});
+
+td.innerHTML = table_data[i][j];
+  => 
+    td.innerHTML = table_data[i][j].value;
+
+span  col  & row
+
+key select span
+=========================================
+key down up left right => celect cell move
+
+=========================================
+
+context-menu freeze on / off
+
+class edittable  scoped css   => style.css
+
+data dump buttom
+
+
+
+========================================
+let json_data3 = `
+[
+   {"index":["A","B","C","D","E"],                                // dict => array
+    "type":{"A":"int","B":"int","C":"int","D":"int","E":"int"},   // append
+    "title":{"A":"A","B":"B","C":"C","D":"D","E":"E"},
+    "freeze": { "c": 0, "r":0},
+    "update":""
+    },
+
+==================================
+table updata:  diff_update
+
+App.svelte
+     bind:json_data={data5}
+
+lib/SvelteEditTable.svelte
+          json_data =  $bindable({}),
+

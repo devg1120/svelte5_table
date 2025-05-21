@@ -43,8 +43,6 @@ export class Table {
       ["right insert col", this.right_insert_col],
       ["span set"       , this.span_set],
       ["span reset"       , this.span_reset],
-      ["span clear"       , this.span_clear],
-      ["span restore"       , this.span_restore],
       ["freeze on " , this.freeze_on],
       ["freeze off ", this.freeze_off],
       ["editor_mode toggle", this.editor_mode_toggle],
@@ -188,7 +186,7 @@ export class Table {
       i++;
     }
     if (items[0].span) {
-      //console.log("span exist");
+      console.log("span exist");
       for (var span of items[0].span) {
          result[span.r][span.c].span = { colspan: span.colspan,  rowspan: span.rowspan };
       }
@@ -267,7 +265,7 @@ export class Table {
         if (i === 0) {
         } else {
           if (table_data[i][j].span) {
-              //console.log("span", this.container_id, i,j);
+              console.log("span", this.container_id, i,j);
               let colspan = 1;
               let rowspan = 1;
               if (table_data[i][j].span.colspan) {
@@ -541,9 +539,6 @@ export class Table {
       return;
     }
 
-    // span clear
-    this.span_clear();
-
     let param = this.select_td[0].id.split("_");
     let row_num = parseInt(param[1]);
     let tr = this.table.insertRow(row_num + 1);
@@ -554,11 +549,6 @@ export class Table {
       newCell.appendChild(newText);
     }
     this.table_setid();
-
-    this.span_shift("next_insert_row", row_num);
-    // span restore
-    this.span_restore();
-
     json_data[0].update = "next-insert-row " + row_num;
     json_data[0].update_source = this.container_id;;
     //let data = json_data[0]["index"]  ;
@@ -572,7 +562,7 @@ export class Table {
     }
    let fields =  { "fields": data };
    Array.prototype.splice.apply(json_data,[row_num + 1,0].concat([fields]));
-   //console.dir(json_data);
+   console.dir(json_data);
    //this. createResizeRowDiv();
    var xDiv = document.createElement("div");
    xDiv.className = "x_resize tb_resize";
@@ -587,10 +577,6 @@ export class Table {
     if (this.select_td[0] == null) {
       return;
     }
-
-    // span clear
-    this.span_clear();
-
     let param = this.select_td[0].id.split("_");
     let row_num = parseInt(param[1]);
     let tr = this.table.insertRow(row_num);
@@ -601,10 +587,6 @@ export class Table {
       newCell.appendChild(newText);
     }
     this.table_setid();
-
-    this.span_shift("prev_insert_row", row_num);
-    // span restore
-    this.span_restore();
 
     json_data[0]["update"] = "prev-insert-row " + row_num;
     json_data[0].update_source = this.container_id;;
@@ -622,8 +604,8 @@ export class Table {
 
    let fields =  { "fields": data };
    Array.prototype.splice.apply(json_data,[row_num,0].concat([fields]));
-   //console.log(json_data);
-   //console.log(json_data.length);
+   console.log(json_data);
+   console.log(json_data.length);
    //this. createResizeRowDiv();
    var xDiv = document.createElement("div");
    xDiv.className = "x_resize tb_resize";
@@ -632,10 +614,6 @@ export class Table {
   };
 
   sync_next_insert_row = (row_num) => {
-
-    // span clear
-    this.sync_span_clear()
-
     let tr = this.table.insertRow(row_num + 1);
     tr.style.height = "35px";
     for (let c = 0; c < this.table_cells(); c++) {
@@ -644,21 +622,12 @@ export class Table {
       newCell.appendChild(newText);
     }
     this.table_setid();
-
-
    var xDiv = document.createElement("div");
    xDiv.className = "x_resize tb_resize";
    xDiv.setAttribute("data-resizerow", json_data.length);
    this.container.append(xDiv);
-    // span restore
-    this.span_restore();
   };
-
   sync_prev_insert_row = (row_num) => {
-
-    // span clear
-    this.sync_span_clear()
-
     let tr = this.table.insertRow(row_num);
     tr.style.height = "35px";
     for (let c = 0; c < this.table_cells(); c++) {
@@ -667,14 +636,10 @@ export class Table {
       newCell.appendChild(newText);
     }
     this.table_setid();
-
-
    var xDiv = document.createElement("div");
    xDiv.className = "x_resize tb_resize";
    xDiv.setAttribute("data-resizerow", json_data.length);
    this.container.append(xDiv);
-    // span restore
-    this.span_restore();
   };
 
   left_insert_col = () => {
@@ -682,9 +647,6 @@ export class Table {
     if (this.select_td[0] == null) {
       return;
     }
-    // span clear
-    this.span_clear();
-
     let param = this.select_td[0].id.split("_");
     let col_num = parseInt(param[2]);
     let r = 0;
@@ -705,10 +667,6 @@ export class Table {
     //setTdWidth(table);
     this.createResizeColDiv();
     this.initEvents(this.table_th);
-
-    this.span_shift("left_insert_col", col_num);
-    // span restore
-    this.span_restore();
 
     json_data[0]["update"] = "left-insert-col " + col_num;
     json_data[0].update_source = this.container_id;;
@@ -735,10 +693,6 @@ export class Table {
     if (this.select_td[0] == null) {
       return;
     }
-
-    // span clear
-    this.span_clear();
-
     let param = this.select_td[0].id.split("_");
     let col_num = parseInt(param[2]);
     let r = 0;
@@ -762,10 +716,6 @@ export class Table {
     this.createResizeColDiv();
     this.initEvents(this.table_th);
 
-    this.span_shift("right_insert_col", col_num);
-    // span restore
-    this.span_restore();
-
     json_data[0]["update"] = "right-insert-col " + col_num;
     json_data[0].update_source = this.container_id;;
     let index = json_data[0]["index"]  ;
@@ -783,8 +733,6 @@ export class Table {
   };
 
   sync_left_insert_col = (col_num) => {
-    // span clear
-    this.sync_span_clear()
     let r = 0;
     this.table.childNodes.forEach((tr) => {
       if (tr.nodeName == "TR") {
@@ -799,18 +747,13 @@ export class Table {
       }
     });
     this.table_setid();
-    //this.span_restore();
     this.table_th = this.table.getElementsByTagName("th");
     //setTdWidth(table);
     this.createResizeColDiv();
     this.initEvents(this.table_th);
-    // span restore
-    this.span_restore();
   };
 
   sync_right_insert_col = (col_num) => {
-    // span clear
-    this.sync_span_clear()
     let r = 0;
     this.table.childNodes.forEach((tr) => {
       if (tr.nodeName == "TR") {
@@ -831,8 +774,6 @@ export class Table {
     //setTdWidth(table);
     this.createResizeColDiv();
     this.initEvents(this.table_th);
-    // span restore
-    this.span_restore();
 
   };
 
@@ -855,12 +796,13 @@ export class Table {
   }
 
   span_set_remove_td(r1, c1, r2, c2) {
-     //console.log(r1, c1, r2, c2);
+     console.log(r1, c1, r2, c2);
      //return;
      for ( let r = r1 ;  r <= r2 ; r++) {
          for ( let c = c1 ;  c <= c2 ; c++) {
 	     if ( r == r1 && c == c1 ) {
 	     } else {
+	      console.log("del", r, c);
               let td = this.table.querySelector("#TD_" + String(r) + "_" + String(c));
 	      td.remove();
 	      }
@@ -869,7 +811,7 @@ export class Table {
   }
   span_set = () => {
     if (this.select_td[0] != null && this.select_td[1] ) {
-       //console.log("span set");
+       console.log("span set");
        let param1 = this.select_td[0].id.split("_");
        let param2 = this.select_td[1].id.split("_");
        let r1 = parseInt(param1[1]);
@@ -878,7 +820,7 @@ export class Table {
        let c2 = parseInt(param2[2]);
        let colspan = c2 - c1 + 1;
        let rowspan = r2 - r1 + 1;
-       //console.log(colspan, rowspan);
+       console.log(colspan, rowspan);
        this.table_data[r1][c1].span = {colspan: colspan,  rowspan: rowspan};
        this.span_set_remove_td(r1,c1, r2, c2);
        if ( colspan > 0 && rowspan > 0 ) {
@@ -890,17 +832,6 @@ export class Table {
           this.select_td[0].setAttribute("rowspan", rowspan);
        }
        this.select_td[1] = null;
-
-
-       json_data[0].update = "span_set " + r1 +  " " + c1;
-       json_data[0].update_source = this.container_id;
-       let span = { r: r1, c: c1, colspan: colspan, rowspan:rowspan };
-       if ( json_data[0]["span"] ) {
-            json_data[0]["span"].push(span);
-       } else {
-            json_data[0]["span"] = [ span ];
-       }
-
     }
 
   }
@@ -913,12 +844,13 @@ export class Table {
            tr_list.push(tr);
       }
     });
-    //console.dir(tr_list)
+    console.dir(tr_list)
     for ( let y = r   ; y < r + lr; y++){ 
         for ( let x = c   ; x < c + lc; x++){ 
-              //console.log(y, x);
+              console.log(y, x);
             if (y == r && x == c) {
             } else {
+              console.log("insert");
               let td = tr_list[y].insertCell(x);
               td.classList.add("noselect");
               td.style = "z-index: 0;";
@@ -964,229 +896,8 @@ export class Table {
 
        }
 
-       //json_data[0].update = "span_reset " + r +  " " + c;
-       json_data[0].update = "span_reset " + r +  " " + c + " " + rowspan + " " + colspan;
-       json_data[0].update_source = this.container_id;
-       if ( json_data[0]["span"] ) {
-            let arr = json_data[0]["span"];
-            for (let i = 0 ; i < arr.length; i++) {
-               if ( arr[i].c == c && arr[i].r == r ) {
-                      console.log("delete span");
-                      arr.splice(i,1);
-               }
-            }
-       } 
-
   }
 
-  span_restore = () => {
-
-    if ( json_data[0]["span"] ) {
-       let arr = json_data[0]["span"];
-       for (let i = 0 ; i < arr.length; i++) {
-           let r1 = arr[i].r
-           let c1 = arr[i].c
-           let rowspan = parseInt(arr[i].rowspan)
-           let colspan = parseInt(arr[i].colspan)
-	   let r2 = r1 + rowspan -1;
-	   let c2 = c1 + colspan -1;
-	   let td = this.table.querySelector("#TD_" + String(r1) + "_" + String(c1));
-	   //console.log(rowspan, colspan);
-           this.span_set_remove_td(r1,c1, r2, c2);
-          if (colspan > 1 && rowspan  > 1) {
-             td.setAttribute("colspan", colspan);
-             td.setAttribute("rowspan", rowspan);
-          } else if (colspan > 1 && rowspan <= 1) {
-             td.setAttribute("colspan", colspan);
-          } else if (colspan <= 1 && rowspan > 1) {
-             td.setAttribute("rowspan", rowspan);
-          } else if (colspan <= 1 && rowspan <= 1) {
-   
-          }
-       }
-    } 
-  }
-
-  span_shift = (direct, num) => {
-
-    if ( json_data[0]["span"] ) {
-       //json_data[0]["sync_span"] = structuredClone(json_data[0]["span"]);
-       json_data[0]["sync_span"] = JSON.parse(JSON.stringify(json_data[0]["span"]));
-       let arr = json_data[0]["span"];
-       for (let i = 0 ; i < arr.length; i++) {
-           let r1 = parseInt(arr[i].r)
-           let c1 = parseInt(arr[i].c)
-           let rowspan = parseInt(arr[i].rowspan)
-           let colspan = parseInt(arr[i].colspan)
-	   let r2 = r1 + rowspan -1;
-	   let c2 = c1 + colspan -1;
-          if (direct == "left_insert_col") {
-              if ( num > c1 && num<=  c2) {
-                   arr[i].colspan += 1;
-              } else if ( num <= c1 ) {
-                   arr[i].c += 1;
-              }
-          } else if (direct == "right_insert_col") {
-              if ( num >= c1 && num <  c2) {
-                   console.log("**colspan + 1");
-                   arr[i].colspan += 1;
-              } else if ( num < c1 ) {
-                   arr[i].c += 1;
-              }
-
-          } else if (direct == "prev_insert_row") {
-              if ( num > r1 && num <=  r2) {
-                   arr[i].rowspan += 1;
-              } else if ( num <= r1 ) {
-                   arr[i].r += 1;
-              }
-          } else if (direct == "next_insert_row") {
-              if ( num >= r1 && num<  r2) {
-                   arr[i].rowspan += 1;
-              } else if ( num < r1 ) {
-                   arr[i].r += 1;
-              }
-          } else {
-                console.log("span_shift direct unknown", direct);
-          }
-       }
-    } 
-  }
-  span_clear = () => {
-    if ( json_data[0]["span"] ) {
-       let arr = json_data[0]["span"];
-       for (let i = 0 ; i < arr.length; i++) {
-           let r = arr[i].r
-           let c = arr[i].c
-           let rowspan = parseInt(arr[i].rowspan)
-           let colspan = parseInt(arr[i].colspan)
-	   let td = this.table.querySelector("#TD_" + String(r) + "_" + String(c));
-	   //console.log(this.container_id,rowspan, colspan, r, c, td);
-          if (colspan > 1 && rowspan  > 1) {
-             td.removeAttribute("colspan");
-             td.removeAttribute("rowspan");
-             this.span_reset_insert_td(r, c, rowspan, colspan);
-          } else if (colspan > 1 && rowspan <= 1) {
-             td.removeAttribute("colspan");
-             this.span_reset_insert_td(r, c, 1, colspan);
-          } else if (colspan <= 1 && rowspan > 1) {
-             td.removeAttribute("rowspan");
-             this.span_reset_insert_td(r, c, rowspan, 1);
-          } else if (colspan <= 1 && rowspan <= 1) {
-   
-          }
-       }
-    } 
-  }
-  sync_span_clear = () => {
-    if ( json_data[0]["sync_span"] ) {
-       let arr = json_data[0]["sync_span"];
-       for (let i = 0 ; i < arr.length; i++) {
-           let r = arr[i].r
-           let c = arr[i].c
-           let rowspan = parseInt(arr[i].rowspan)
-           let colspan = parseInt(arr[i].colspan)
-	   let td = this.table.querySelector("#TD_" + String(r) + "_" + String(c));
-	   console.log(this.container_id,rowspan, colspan, r, c, td);
-          if (colspan > 1 && rowspan  > 1) {
-             td.removeAttribute("colspan");
-             td.removeAttribute("rowspan");
-             this.span_reset_insert_td(r, c, rowspan, colspan);
-          } else if (colspan > 1 && rowspan <= 1) {
-             td.removeAttribute("colspan");
-             this.span_reset_insert_td(r, c, 1, colspan);
-          } else if (colspan <= 1 && rowspan > 1) {
-             td.removeAttribute("rowspan");
-             this.span_reset_insert_td(r, c, rowspan, 1);
-          } else if (colspan <= 1 && rowspan <= 1) {
-   
-          }
-       }
-    } 
-  }
-
-  sync_span_set(r , c) {
-   //  console.log(this.container_id, "sync_span_set", r, c);
-   if ( json_data[0]["span"] ) {
-       let arr = json_data[0]["span"];
-       for (let i = 0 ; i < arr.length; i++) {
-           let r1 = arr[i].r
-           let c1 = arr[i].c
-           if ( r == r1 && c == c1 ) {
-                let rowspan = parseInt(arr[i].rowspan)
-                let colspan = parseInt(arr[i].colspan)
-                let r2 = r1 + rowspan -1;
-                let c2 = c1 + colspan -1;
-                let td = this.table.querySelector("#TD_" + String(r1) + "_" + String(c1));
-                //console.log(rowspan, colspan);
-                this.span_set_remove_td(r1,c1, r2, c2);
-               if (colspan > 1 && rowspan  > 1) {
-                  td.setAttribute("colspan", colspan);
-                  td.setAttribute("rowspan", rowspan);
-               } else if (colspan > 1 && rowspan <= 1) {
-                  td.setAttribute("colspan", colspan);
-               } else if (colspan <= 1 && rowspan > 1) {
-                  td.setAttribute("rowspan", rowspan);
-               } else if (colspan <= 1 && rowspan <= 1) {
-   
-               }
-               break;
-           }
-       }
-    } 
-
-  }
-
-  sync_span_reset(r , c, rowspan, colspan) {
-     console.log(this.container_id, "sync_span_reset", r, c);
-	 let td = this.table.querySelector("#TD_" + String(r) + "_" + String(c));
-	 //console.log(rowspan, colspan);
-         if (colspan > 1 && rowspan  > 1) {
-            td.removeAttribute("colspan");
-            td.removeAttribute("rowspan");
-            this.span_reset_insert_td(r, c, rowspan, colspan);
-         } else if (colspan > 1 && rowspan <= 1) {
-            td.removeAttribute("colspan");
-            this.span_reset_insert_td(r, c, 1, colspan);
-         } else if (colspan <= 1 && rowspan > 1) {
-            td.removeAttribute("rowspan");
-            this.span_reset_insert_td(r, c, rowspan, 1);
-         } else if (colspan <= 1 && rowspan <= 1) {
-   
-         }
-    } 
-
-  sync_span_reset_old(r , c) {
-     console.log(this.container_id, "sync_span_reset", r, c);
-    if ( json_data[0]["span"] ) {
-       let arr = json_data[0]["span"];
-       for (let i = 0 ; i < arr.length; i++) {
-           let r1 = arr[i].r
-           let c1 = arr[i].c
-           if ( r == r1 && c == c1 ) {
-               console.log("**** span reset");
-               let rowspan = parseInt(arr[i].rowspan)
-               let colspan = parseInt(arr[i].colspan)
-	       let td = this.table.querySelector("#TD_" + String(r1) + "_" + String(c1));
-	       //console.log(rowspan, colspan);
-               if (colspan > 1 && rowspan  > 1) {
-                  td.removeAttribute("colspan");
-                  td.removeAttribute("rowspan");
-                  this.span_reset_insert_td(r1, c1, rowspan, colspan);
-               } else if (colspan > 1 && rowspan <= 1) {
-                  td.removeAttribute("colspan");
-                  this.span_reset_insert_td(r1, c1, 1, colspan);
-               } else if (colspan <= 1 && rowspan > 1) {
-                  td.removeAttribute("rowspan");
-                  this.span_reset_insert_td(r1, c1, rowspan, 1);
-               } else if (colspan <= 1 && rowspan <= 1) {
-   
-               }
-            }
-       }
-    } 
-
-  }
   editor_mode_toggle = () => {
      this.editor_mode = !this.editor_mode;
   }
@@ -1361,7 +1072,7 @@ export class Table {
 
       td.removeEventListener("mousedown", null);
       td.addEventListener("mousedown", (e) => {
-        //console.log("td mousedown", e.button);
+        console.log("td mousedown", e.button);
         if (this.editor != null) {
           let content = this.editor.getContents(true);
           this.editor.destroy();
@@ -2041,40 +1752,28 @@ $effect(() => {
  } else {
    if (json_data[0].update_source != container_id) {
      console.log(table.container_id, "update....", json_data[0].update);
-     //console.log(json_data);
+     console.log(json_data);
      let param = json_data[0].update.split(" ");
      let update_type = param[0];
      if (update_type == "value-change") {
-        //console.log("table.update");
+         console.log("table.update");
         table.update(json_data);
      } else if (update_type == "prev-insert-row") {
-        //console.log("prev");
+        console.log("prev");
         let row_num = parseInt(param[1]);
         table.sync_prev_insert_row(row_num);
      } else if (update_type == "next-insert-row") {
-        //console.log("next");
+        console.log("next");
         let row_num = parseInt(param[1]);
         table.sync_next_insert_row(row_num);
      } else if (update_type == "left-insert-col") {
-        //console.log("left");
+        console.log("left");
         let col_num = parseInt(param[1]);
         table.sync_left_insert_col(col_num);
      } else if (update_type == "right-insert-col") {
-        //console.log("right");
+        console.log("right");
         let col_num = parseInt(param[1]);
         table.sync_right_insert_col(col_num);
-     } else if (update_type == "span_set") {
-        //console.log(this.container_id,"span set");
-        let row_num = parseInt(param[1]);
-        let col_num = parseInt(param[2]);
-        table.sync_span_set(row_num, col_num);
-     } else if (update_type == "span_reset") {
-        //console.log("span reset");
-        let row_num = parseInt(param[1]);
-        let col_num = parseInt(param[2]);
-        let rowspan = parseInt(param[3]);
-        let colspan = parseInt(param[4]);
-        table.sync_span_reset(row_num, col_num, rowspan, colspan);
      }
    }
  }
