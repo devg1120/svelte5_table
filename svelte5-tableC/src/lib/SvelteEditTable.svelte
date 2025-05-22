@@ -1938,7 +1938,8 @@ while(true){
       if (ele == null) {
         return 0;
       }
-      height += ele.clientHeight;
+      //height += ele.clientHeight;
+      height += ele.offsetHeight - 0.5;
     }
     return height + offset;
   }
@@ -1952,7 +1953,8 @@ while(true){
       if (ele == null) {
         return 0;
       }
-      width += ele.clientWidth;
+      //width += ele.clientWidth;
+      width += ele.offsetWidth;
     }
     return width + offset;
   }
@@ -1977,6 +1979,7 @@ while(true){
     if (this.isrFreeze()) {
       if (r < this.freeze_decoded.r) {
         let tophight = this.sum_top_height(r);
+	//console.log("tr", r, tophight);
         tr.style.position = "sticky";
         tr.style.top = `${tophight}px`;
         tr.style.background = "white";
@@ -1998,6 +2001,7 @@ while(true){
     if (this.isrFreeze()) {
       if (c < this.freeze_decoded.c) {
         let leftwidth = this.sum_left_width(c);
+	//console.log("td", r, c , leftwidth);
         td.style.position = "sticky";
         td.style.left = `${leftwidth}px`;
         td.style.background = "white";

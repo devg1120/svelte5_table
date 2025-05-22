@@ -75,23 +75,27 @@
 
 
 table {
-  border-collapse: collapse;
-  outline: none;
+  /* border-collapse: collapse;*/
+ /* outline: none;*/
   table-layout: fixed;
 
   overflow: scroll;
+  border-spacing: 0;
+
 }
 
 
 table tr td,
 table tr th {
   word-wrap: break-word;
-  border: 1px solid #000;
-  min-width: 130px;
+   border: 0.5px solid #000; 
+
+  /*min-width: 130px;*/
   padding: 5px;
   position: relative;
   text-align: left;
   box-sizing: border-box;
+  width: 30px;
   min-width: 30px;
 }
 
